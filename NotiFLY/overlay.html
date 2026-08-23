@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>NotiFLY Overlay</title>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      .reminder {
+        position: fixed;
+        left: -520px;
+        top: 45%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 22px;
+        border-radius: 8px;
+        background: #ff75b5;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        white-space: nowrap;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+        animation: none;
+      }
+
+      .plane {
+        font-size: 42px;
+      }
+
+      @keyframes fly {
+        from {
+          left: -520px;
+          transform: rotate(-3deg);
+        }
+
+        to {
+          left: 100vw;
+          transform: rotate(3deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reminder">
+      <span class="plane">✈️</span>
+      <span class="message">Your meeting is in 5 minutes</span>
+    </div>
+
+    <script>
+      const reminder = document.querySelector(".reminder");
+      const message = document.querySelector(".message");
+
+      window.notiFly.onFlyby((newMessage) => {
+        message.textContent = newMessage;
+
+        reminder.style.animation = "none";
+        void reminder.offsetWidth;
+        reminder.style.animation = "fly 7s linear forwards";
+      });
+    </script>
+  </body>
+</html>

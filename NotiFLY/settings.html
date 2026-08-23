@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>NotiFLY</title>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 34px;
+        background: #fff8fc;
+        color: #2c1b2c;
+        font-family: Arial, sans-serif;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+      }
+
+      p {
+        color: #765b70;
+        line-height: 1.5;
+      }
+
+      label {
+        display: block;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+
+      input,
+      button {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 15px;
+      }
+
+      input {
+        margin-top: 10px;
+        border: 1px solid #e6bfd4;
+        background: #ffffff;
+      }
+
+      button {
+        margin-top: 14px;
+        border: 0;
+        background: #ff75b5;
+        color: #ffffff;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #f45ea7;
+      }
+
+      #status {
+        font-size: 13px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>NotiFLY ✈️</h1>
+    <p>A gentle fly-by before your meetings.</p>
+
+    <label for="reminder">Remind me before my meeting:</label>
+
+    <input
+      id="reminder"
+      type="number"
+      min="1"
+      max="60"
+      value="5"
+    />
+
+    <p>minutes before</p>
+
+    <button id="connect">Connect Google Calendar</button>
+    <button id="test">Test a flight</button>
+
+    <p id="status">Not connected</p>
+
+    <script>
+      const status = document.getElementById("status");
+      const reminder = document.getElementById("reminder");
+
+      window.notiFly.calendarStatus().then((connected) => {
+        if (connected) {
+          status.textContent = "Google Calendar connected ✓";
+          document.getElementById("connect").textContent = "Calendar connected";
+        }
+      });
+
+      reminder.addEventListener("change", (event) => {
+        window.notiFly.setReminder(event.target.value);
+      });
+
+      document.getElementById("test").addEventListener("click", () => {
+        window.notiFly.testFlight();
+      });
+
+      document.getElementById("connect").addEventListener("click", async () => {
+        status.textContent = "Opening Google sign-in…";
+
+        try {
+          await window.notiFly.connectCalendar();
+          status.textContent = "Google Calendar connected ✓";
+          document.getElementById("connect").textContent = "Calendar connected";
+        } catch (error) {
+          status.textContent = error.message;
+        }
+      });
+    </script>
+  </body>
+</html>
